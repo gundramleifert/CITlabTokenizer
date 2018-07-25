@@ -1,0 +1,11 @@
+# Changelog
+
+## 1.0
+* put Tokenizer to group CITlab and refactor prefix from eu.transkribus.TranskribusTokenizer to de.uros.citlab.tokenizer
+
+## 0.3 
+* start using changelog
+* 3 different tokenizer implemented
+** TokenizerConfig from ASV can be configured by using a java property file
+** TokenizerCategorizer from URO can be configured by setting a Categorizer.
+*** Default Categorizer should be CategorizerWordMergeGroups 

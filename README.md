@@ -1,6 +1,6 @@
 # Tokenizer
 
-The tokenizer can be called with a `properties` file. An example can be found [here](https://github.com/Transkribus/TranskribusTokenizer/blob/master/src/test/resources/tokenizer_config.properties).
+The tokenizer can be called with a `properties` file. An example can be found [here](https://github.com/CITlabRostock/CITlabTokenizer/blob/master/src/test/resources/tokenizer_config.properties).
 
 ## Rules
 * Normalization

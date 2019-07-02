@@ -5,10 +5,8 @@
  */
 package de.uros.citlab.tokenizer.categorizer;
 
-import com.sun.xml.internal.messaging.saaj.packaging.mime.util.LineInputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sun.nio.cs.StreamDecoder;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -124,7 +122,7 @@ public class CategoryUtils {
     private static void loadCategoryMap() {
         leftRight = new TreeMap<>();
         leftCategory = new TreeMap<>();
-        try (BufferedReader lis = new BufferedReader(new InputStreamReader(ClassLoader.getSystemResourceAsStream("DerivedGeneralCategory.txt"))))  {
+        try (BufferedReader lis = new BufferedReader(new InputStreamReader(ClassLoader.getSystemResourceAsStream("DerivedGeneralCategory.txt")))) {
             String s;
             while ((s = lis.readLine()) != null) {
                 if (s.isEmpty() || s.startsWith("#")) {

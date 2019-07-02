@@ -6,39 +6,38 @@
 package de.uros.citlab.tokenizer;
 
 import eu.transkribus.interfaces.ITokenizer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.List;
-import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.text.Normalizer;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
 import java.util.regex.Pattern;
 
 /**
  * The TokenizerConfig is used to tokenized strings. The main idea is that is being used with a configuration file. If different use cases call for different types of tokenization, the same tokenizer with different configuration files can be used.
- *
+ * <p>
  * Rules are: - Normalization - Dehyphanation signs - Delimiter signs - Delimiter signs being kept as tokens
- *
+ * <p>
  * Further explanation:
- *
+ * <p>
  * - Normalization: The Java normalizer tackles the representation problem of characters like á or ö. These characters can be represented as a single character (á or ö) or as a basic character with additional diacritic. The java normalizer changes the representation to either representation type.
- *
+ * <p>
  * - Dehypenation signs When a word at the end of the line is being cut off and continued on the next line, there often is a hyphenation sign. The tokenizer looks for a given set of files, a following \n and a following small letter in the next line. If that expression is found, the split up word is being put together.
- *
+ * <p>
  * - Delimiter signs Delemiter are used for splitting tokens. Common signs among others are spaces, newlines and dots.
- *
+ * <p>
  * - Delimiter signs being kept as tokens When there is a token like 'is, ', the user may be interested in getting 'is' as a token and the comma as a dedicated token.
- *
  *
  * @author max
  */
-public class TokenizerConfig implements ITokenizer
-{
-
-//    public enum NormalizerOption
+public class TokenizerConfig implements ITokenizer {
+    private static final Logger LOG = LoggerFactory.getLogger(TokenizerConfig.class.getName());
+    //    public enum NormalizerOption
 //    {
 //
 //        None,
@@ -47,43 +46,34 @@ public class TokenizerConfig implements ITokenizer
 //    }
     private final Properties properties;
 
-    public TokenizerConfig()
-    {
+    public TokenizerConfig() {
         properties = new Properties();
     }
 
-    public TokenizerConfig(Properties properties)
-    {
+    public TokenizerConfig(Properties properties) {
         this.properties = properties;
     }
 
-    public TokenizerConfig(String pathToConfig)
-    {
+    public TokenizerConfig(String pathToConfig) {
         this(new File(pathToConfig));
     }
 
-    public TokenizerConfig(File configFile)
-    {
+    public TokenizerConfig(File configFile) {
         properties = new Properties();
-        try
-        {
+        try {
             properties.load(new FileInputStream(configFile));
-        } catch (IOException ex)
-        {
-            Logger.getLogger(TokenizerConfig.class.getName()).log(Level.SEVERE, null, ex);
-            throw new RuntimeException("Could not load given property file with path: " + configFile.getAbsolutePath());
+        } catch (IOException ex) {
+            LOG.error("Could not load given property file with path: {} ", configFile.getAbsolutePath(), ex);
+            throw new RuntimeException("Could not load given property file with path: " + configFile.getAbsolutePath(), ex);
         }
     }
 
     @Override
-    public List<String> tokenize(String text)
-    {
+    public List<String> tokenize(String text) {
         String normalizerString = properties.getProperty("normalizer", null);
         Normalizer.Form normalizer = null;
-        if (normalizerString != null && !normalizerString.equals("None"))
-        {
-            switch (normalizerString)
-            {
+        if (normalizerString != null && !normalizerString.equals("None")) {
+            switch (normalizerString) {
                 case "NFC":
                     normalizer = Normalizer.Form.NFC;
                     break;
@@ -110,10 +100,8 @@ public class TokenizerConfig implements ITokenizer
         return tokenize(text, normalizer, dehyphenationSigns, delimiterSigns, keepDelimiterSigns, splitAllDelimiterSigns, keepAllDelimiterSigns, tokenizeCharacterWise, splitNumbers);
     }
 
-    public String normalize(String text, Normalizer.Form normalizer)
-    {
-        if (normalizer == null)
-        {
+    public String normalize(String text, Normalizer.Form normalizer) {
+        if (normalizer == null) {
             return text;
         }
         return Normalizer.normalize(text, normalizer);
@@ -128,10 +116,8 @@ public class TokenizerConfig implements ITokenizer
             boolean splitAllDelimiterSigns,
             boolean keepAllDelimiterSigns,
             boolean tokenizeCharacterWise,
-            boolean splitNumbers)
-    {
-        if (normalizer != null)
-        {
+            boolean splitNumbers) {
+        if (normalizer != null) {
             text = normalize(text, normalizer);
         }
 
@@ -150,26 +136,20 @@ public class TokenizerConfig implements ITokenizer
         boolean dehyphenize = false;
         boolean finishToken = false;
 
-        for (int index = 0; index < lenText; index++)
-        {
+        for (int index = 0; index < lenText; index++) {
             charCurrent = text.charAt(index);
             boolean isPunctuation = Pattern.matches("\\p{Punct}", Character.toString(charCurrent));
 
-            if (tokenizeCharacterWise)
-            {
+            if (tokenizeCharacterWise) {
                 tokenizedText.add(Character.toString(charCurrent));
-            } else
-            {
-                if (index + 2 < lenText && dehyphenizationSigns.contains(charCurrent))
-                {
+            } else {
+                if (index + 2 < lenText && dehyphenizationSigns.contains(charCurrent)) {
 
                     charNext = text.charAt(index + 1);
-                    if ("\n".charAt(0) == charNext)
-                    {
+                    if ("\n".charAt(0) == charNext) {
 
                         charNext2 = text.charAt(index + 2);
-                        if (isLowercase(charNext2))
-                        {
+                        if (isLowercase(charNext2)) {
                             dehyphenize = true;
                             continue;
                         }
@@ -189,15 +169,12 @@ public class TokenizerConfig implements ITokenizer
                 }
 
                 dehyphenize = !delimiterSigns.contains(charCurrent);
-                if (!finishToken)
-                {
+                if (!finishToken) {
                     finishToken = !dehyphenize;
                 }
 
-                if (finishToken)
-                {
-                    if (nextToken.toString().length() > 0)
-                    {
+                if (finishToken) {
+                    if (nextToken.toString().length() > 0) {
                         tokenizedText.add(nextToken.toString());
                         nextToken = new StringBuilder();
                     }
@@ -210,36 +187,31 @@ public class TokenizerConfig implements ITokenizer
                         nextToken.append(charCurrent);
                     }
                     finishToken = false;
-                } else
-                {
+                } else {
                     nextToken.append(charCurrent);
                 }
             }
         }
 
-        if (nextToken.toString().length() > 0)
-        {
+        if (nextToken.toString().length() > 0) {
             tokenizedText.add(nextToken.toString());
         }
 
         return tokenizedText;
     }
 
-    private List<Character> createSignListFromString(String signString)
-    {
+    private List<Character> createSignListFromString(String signString) {
         int numSigns = signString.length();
         List<Character> signList = new ArrayList<>(numSigns);
 
-        for (int index = 0; index < numSigns; index++)
-        {
+        for (int index = 0; index < numSigns; index++) {
             signList.add(signString.charAt(index));
         }
 
         return signList;
     }
 
-    private boolean isLowercase(char c)
-    {
+    private boolean isLowercase(char c) {
         return Character.toLowerCase(c) == c;
     }
 }

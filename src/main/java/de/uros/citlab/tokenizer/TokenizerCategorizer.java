@@ -7,10 +7,11 @@ package de.uros.citlab.tokenizer;
 
 import de.uros.citlab.tokenizer.interfaces.ICategorizer;
 import eu.transkribus.interfaces.ITokenizer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.logging.Logger;
 
 /**
  * This tokenizer uses a categorizer to tokenize a String. The main idea is that
@@ -31,7 +32,7 @@ import java.util.logging.Logger;
 public class TokenizerCategorizer implements ITokenizer {
 
     private final ICategorizer categorizer;
-    public static Logger LOG = Logger.getLogger(TokenizerCategorizer.class.getName());
+    public static Logger LOG = LoggerFactory.getLogger(TokenizerCategorizer.class.getName());
 
     public TokenizerCategorizer(ICategorizer categorizer) {
         this.categorizer = categorizer;

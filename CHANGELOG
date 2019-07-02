@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.1.0
+* feature: Categorizer supports Unicode characters from Version 12.1.0
+
 ## 1.0
 * put Tokenizer to group CITlab and refactor prefix from eu.transkribus.TranskribusTokenizer to de.uros.citlab.tokenizer
 

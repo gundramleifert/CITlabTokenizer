@@ -6,8 +6,8 @@
 package de.uros.citlab.tokenizer.categorizer;
 
 import de.uros.citlab.tokenizer.interfaces.ICategorizer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * categorizes characters by their general category specified by the unicode
@@ -20,7 +20,7 @@ import java.util.logging.Logger;
  */
 public class CategorizerWordMergeGroups implements ICategorizer {
 
-    public static Logger LOG = Logger.getLogger(CategorizerWordMergeGroups.class.getName());
+    public static Logger LOG = LoggerFactory.getLogger(CategorizerWordMergeGroups.class.getName());
 
     @Override
     public String getCategory(char c) {
@@ -39,7 +39,7 @@ public class CategorizerWordMergeGroups implements ICategorizer {
             case "C":
                 switch (CategoryUtils.getCategory(c)) {
                     case "Cs":
-                        LOG.log(Level.WARNING, "cannot handle surrogates - character ''{0}'' with decimal-value {1}. Assume to be a letter.", new Object[]{c, (int) c});
+                        LOG.warn("cannot handle surrogates - character ''{}'' with decimal-value {}. Assume to be a letter.", c, (int) c);
 //                        throw new RuntimeException("cannot handle surrogates - character '" + c + "' with decimal-value " + ((int) c) + ".");
                     case "Co":
                         return "L";

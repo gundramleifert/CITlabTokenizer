@@ -6,7 +6,7 @@
 package de.uros.citlab.tokenizer;
 
 import de.uros.citlab.tokenizer.interfaces.ICategorizer;
-import eu.transkribus.interfaces.ITokenizer;
+import de.uros.citlab.tokenizer.interfaces.ITokenizer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

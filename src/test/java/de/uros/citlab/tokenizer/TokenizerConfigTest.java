@@ -5,29 +5,23 @@
  */
 package de.uros.citlab.tokenizer;
 
-import de.uros.citlab.tokenizer.TokenizerConfig;
-import eu.transkribus.interfaces.ITokenizer;
-import de.uros.citlab.tokenizer.TokenizerCategorizer;
 import de.uros.citlab.tokenizer.categorizer.CategorizerWordDft;
-import de.uros.citlab.tokenizer.dehyphenator.DehyphenatorSimple;
+import de.uros.citlab.tokenizer.interfaces.ITokenizer;
+import org.junit.*;
+
 import java.io.File;
 import java.net.URL;
 import java.text.Normalizer;
 import java.util.LinkedList;
 import java.util.List;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import static org.junit.Assert.*;
+
+import static org.junit.Assert.assertEquals;
 
 /**
- *
  * @author max
  */
 public class TokenizerConfigTest {
-    
+
     private static class TestCase {
 
         public String input;

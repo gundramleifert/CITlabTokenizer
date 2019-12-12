@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.0.1
+* clean up parent pom
+
+## 2.0.0
+* make independent from TranskribusInterfaces
+
 ## 1.1.0
 * feature: Categorizer supports Unicode characters from Version 12.1.0
 
